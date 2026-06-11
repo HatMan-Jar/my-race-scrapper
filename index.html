@@ -106,10 +106,23 @@ function calculateScore(horse, raceRunners, placesPaid) {
 }
 
 function getVerdict(score) {
-    if (score >= 22) return '<span class="badge badge-strong">Strong Candidate 🍾</span>';
-    if (score >= 18) return '<span class="badge badge-consider">Worth Considering EW</span>';
-    if (score >= 15) return '<span class="badge badge-watch">Watchlist Only</span>';
-    return '<span class="badge" style="background:#e5e5ea; color:#86868b;">Ignore</span>';
+
+    if (score >= 24)
+        return '<span class="badge badge-strong">A+ Ferrari 🍾🏎️</span>';
+
+    if (score >= 21)
+        return '<span class="badge badge-strong">A Grade</span>';
+
+    if (score >= 18)
+        return '<span class="badge badge-consider">B+ Grade</span>';
+
+    if (score >= 15)
+        return '<span class="badge badge-watch">B Grade</span>';
+
+    if (score >= 12)
+        return '<span class="badge badge-watch">C Grade</span>';
+
+    return '<span class="badge" style="background:#e5e5ea; color:#86868b;">Skip</span>';
 }
 
 function loadDemoData() {
