@@ -133,6 +133,11 @@ function renderRaces(races) {
     const resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = ""; 
 
+    const resultsDiv = document.getElementById("results");
+resultsDiv.innerHTML = "";
+
+let allSelections = [];
+
     // Filter rules: Must be a Handicap, 9+ runners, AND paying 4 or more places
     const filteredRaces = races.filter(race => race.type === "Handicap" && race.runners >= 9 && race.placesPaid >= 4);
 
