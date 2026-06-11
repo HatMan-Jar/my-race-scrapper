@@ -1,0 +1,5 @@
+The demo data has 3 races but only 2 are handicaps with 10+ runners — those should be showing. Let me check what's happening.
+
+Found the issue — the `renderRaces` function writes into `id="results"` but there are **two** elements with that same id in the page (the API note section and the results section). The browser only finds the first one, so the races render into the wrong div and don't appear. Let me fix it.
+
+That should fix it — two divs had the same `id="results"` so the races were rendering into the wrong one. Try **Demo Data** again and the Haydock and Newbury races should appear with their scored horses.
