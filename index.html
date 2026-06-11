@@ -11,7 +11,8 @@
         .btn { background-color: #0071e3; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; margin-bottom: 15px; }
         .btn:hover { background-color: #0077ed; }
         .race-card { background: #fbfbfd; border: 1px solid #d2d2d7; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
-        .race-title { font-size: 18px; font-weight: bold; color: #1d1d1f; margin-bottom: 10px; }
+        .race-title { font-size: 18px; font-weight: bold; color: #1d1d1f; margin-bottom: 5px; }
+        .race-subtitle { font-size: 13px; color: #86868b; margin-bottom: 15px; font-weight: 500; }
         .horse-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e5e5ea; }
         .horse-row:last-child { border-bottom: none; }
         .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
@@ -26,9 +27,8 @@
 <div class="container">
     <h1>🍾 Ferrari & Champagne Racing Bot</h1>
     
-    <!-- FIXED ID: Changed from "results" to "api-notes-section" to prevent DOM conflict -->
     <div id="api-notes-section">
-        <strong>Filter Settings:</strong> Handicaps only | <strong>9+ Runners</strong> | Odds 6/1 - 16/1
+        <strong>Filter Settings:</strong> Handicaps only | <strong>9+ Runners</strong> | <strong>4+ EW Places</strong> | Odds 6/1 - 16/1
     </div>
 
     <button class="btn" onclick="loadDemoData()">Load Demo Data</button>
@@ -39,16 +39,17 @@
 </div>
 
 <script>
-// The original demo dataset
+// Updated demo dataset including EW Places
 const demoData = [
     {
         course: "Haydock",
         time: "14:30",
         type: "Handicap",
-        runners: 11, // Meets 9+ criteria
+        runners: 11,
+        placesPaid: 4, // MEETS CRITERIA (4 places)
         horses: [
             { name: "Champagne Prince", odds: "8/1", features: ["market_move", "ground_suitability", "better_than_result", "handicap_mark", "trainer_form"] },
-            { name: "Fast Runner", odds: "4/1", features: ["ground_suitability"] }, // Odds too short
+            { name: "Fast Runner", odds: "4/1", features: ["ground_suitability"] },
             { name: "Noble Dancer", odds: "10/1", features: ["better_than_result", "dropping_class", "jockey_upgrade"] }
         ]
     },
@@ -56,25 +57,27 @@ const demoData = [
         course: "Newbury",
         time: "15:05",
         type: "Handicap",
-        runners: 14, // Meets 9+ criteria
+        runners: 14,
+        placesPaid: 5, // MEETS CRITERIA (5 places + activates 12+ runner bonus)
         horses: [
-            { name: "Ferrari Roadster", odds: "12/1", features: ["market_move", "ground_suitability", "dropping_class", "big_field", "odds_range", "handicap_mark", "draw"] },
-            { name: "Steady Eddie", odds: "20/1", features: ["trainer_form"] } // Odds too high
+            { name: "Ferrari Roadster", odds: "12/1", features: ["market_move", "ground_suitability", "dropping_class", "handicap_mark", "draw"] },
+            { name: "Steady Eddie", odds: "20/1", features: ["trainer_form"] }
         ]
     },
     {
-        course: "Ascot",
-        time: "16:00",
+        course: "Sandown",
+        time: "15:40",
         type: "Handicap",
-        runners: 7, // WILL BE HIDDEN (Less than 9 runners)
+        runners: 10,
+        placesPaid: 3, // WILL BE HIDDEN (Less than 4 places)
         horses: [
-            { name: "Gold Finder", odds: "7/1", features: ["market_move", "ground_suitability"] }
+            { name: "Place Finder", odds: "8/1", features: ["market_move", "ground_suitability"] }
         ]
     }
 ];
 
 // Exact Ferrari & Champagne Scoring System
-function calculateScore(horse, raceRunners) {
+function calculateScore(horse, raceRunners, placesPaid) {
     let score = 0;
     
     if (horse.features.includes("market_move")) score += 4;
@@ -87,10 +90,12 @@ function calculateScore(horse, raceRunners) {
     if (horse.features.includes("draw")) score += 2;
     if (horse.features.includes("lightly_raced")) score += 2;
 
-    // Core Angle checks
-    if (raceRunners >= 12) score += 3; // Big field angle
+    // Angle 9: Big-field handicap (12+ runners, 4-5 places) (+3)
+    if (raceRunners >= 12 && (placesPaid === 4 || placesPaid === 5)) {
+        score += 3;
+    }
     
-    // Parse odds to check 6/1 - 16/1 angle
+    // Parse odds to check 6/1 - 16/1 angle (+3)
     const parts = horse.odds.split('/');
     if (parts.length === 2) {
         const val = parseFloat(parts[0]) / parseFloat(parts[1]);
@@ -113,24 +118,25 @@ function loadDemoData() {
 
 function renderRaces(races) {
     const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = ""; // Clear loader text
+    resultsDiv.innerHTML = ""; 
 
-    // Filter rules: Must be a Handicap and have 9+ runners
-    const filteredRaces = races.filter(race => race.type === "Handicap" && race.runners >= 9);
+    // Filter rules: Must be a Handicap, 9+ runners, AND paying 4 or more places
+    const filteredRaces = races.filter(race => race.type === "Handicap" && race.runners >= 9 && race.placesPaid >= 4);
 
     if (filteredRaces.length === 0) {
-        resultsDiv.innerHTML = "<p>No races matched the criteria (Handicaps with 9+ runners).</p>";
+        resultsDiv.innerHTML = "<p style='text-align:center; color:#86868b;'>No races matched the criteria (Handicaps, 9+ runners, 4+ places).</p>";
         return;
     }
 
     filteredRaces.forEach(race => {
         let raceHtml = `
             <div class="race-card">
-                <div class="race-title">📍 ${race.course} ${race.time} (${race.runners} Runners)</div>
+                <div class="race-title">📍 ${race.course} ${race.time}</div>
+                <div class="race-subtitle">${race.runners} Runners | Bookmaker Paying: <strong>${race.placesPaid} Places</strong></div>
         `;
 
         race.horses.forEach(horse => {
-            const score = calculateScore(horse, race.runners);
+            const score = calculateScore(horse, race.runners, race.placesPaid);
             const verdict = getVerdict(score);
             
             raceHtml += `
@@ -149,4 +155,3 @@ function renderRaces(races) {
 
 </body>
 </html>
-
