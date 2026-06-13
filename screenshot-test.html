@@ -12,14 +12,22 @@
 
 <img id="preview" style="max-width:100%;">
 
+<div id="info"></div>
+
 <script>
 document.getElementById('imageInput').addEventListener('change', function(event) {
   const file = event.target.files[0];
 
   if (file) {
+
     document.getElementById('preview').src =
-      URL.createObjectURL(file);
-  }
+        URL.createObjectURL(file);
+
+    document.getElementById('info').innerHTML =
+        "<h3>Screenshot loaded</h3>" +
+        "<p>Name: " + file.name + "</p>" +
+        "<p>Size: " + Math.round(file.size / 1024) + " KB</p>";
+}
 });
 </script>
 
