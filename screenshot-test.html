@@ -13,6 +13,17 @@
 <img id="preview" style="max-width:100%;">
 
 <div id="info"></div>
+<br>
+
+<input id="horseName" placeholder="Horse name">
+
+<input id="horseOdds" placeholder="Odds (e.g. 9/1)">
+
+<button onclick="scoreHorse()">
+Score Horse
+</button>
+
+<div id="scoreResult"></div>
 
 <script>
 document.getElementById('imageInput').addEventListener('change', function(event) {
@@ -29,6 +40,41 @@ document.getElementById('imageInput').addEventListener('change', function(event)
         "<p>Size: " + Math.round(file.size / 1024) + " KB</p>";
 }
 });
+function scoreHorse() {
+
+    const name =
+        document.getElementById('horseName').value;
+
+    const odds =
+        document.getElementById('horseOdds').value;
+
+    let score = 0;
+
+    const parts = odds.split('/');
+
+    if (parts.length === 2) {
+
+        const val =
+            parseFloat(parts[0]) /
+            parseFloat(parts[1]);
+
+        if (val >= 6 && val <= 16) {
+            score += 3;
+        }
+    }
+
+    let verdict = "No Bet";
+
+    if (score >= 3) {
+        verdict = "Ferrari Candidate 🍾";
+    }
+
+    document.getElementById('scoreResult').innerHTML =
+        "<h3>" + name + "</h3>" +
+        "<p>Odds: " + odds + "</p>" +
+        "<p>Score: " + score + "</p>" +
+        "<p>" + verdict + "</p>";
+}
 </script>
 
 </body>
