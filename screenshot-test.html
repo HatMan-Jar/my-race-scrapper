@@ -1,1 +1,27 @@
 //Screenshots
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Ferrari Screenshot Tester</h1>
+
+<input type="file" id="imageInput">
+
+<br><br>
+
+<img id="preview" style="max-width:100%;">
+
+<script>
+document.getElementById('imageInput').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+
+  if (file) {
+    document.getElementById('preview').src =
+      URL.createObjectURL(file);
+  }
+});
+</script>
+
+</body>
+</html>
