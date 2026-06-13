@@ -39,42 +39,6 @@
 </div>
 
 <script>
-// Updated demo dataset including EW Places
-const todaysRaces = [
-    {
-        course: "Haydock",
-        time: "14:30",
-        type: "Handicap",
-        runners: 11,
-        placesPaid: 4, // MEETS CRITERIA (4 places)
-        horses: [
-            { name: "Champagne Prince", odds: "8/1", features: ["market_move", "ground_suitability", "better_than_result", "handicap_mark", "trainer_form"] },
-            { name: "Fast Runner", odds: "4/1", features: ["ground_suitability"] },
-            { name: "Noble Dancer", odds: "10/1", features: ["better_than_result", "dropping_class", "jockey_upgrade"] }
-        ]
-    },
-    {
-        course: "Newbury",
-        time: "15:05",
-        type: "Handicap",
-        runners: 14,
-        placesPaid: 5, // MEETS CRITERIA (5 places + activates 12+ runner bonus)
-        horses: [
-            { name: "Ferrari Roadster", odds: "12/1", features: ["market_move", "ground_suitability", "dropping_class", "handicap_mark", "draw"] },
-            { name: "Steady Eddie", odds: "20/1", features: ["trainer_form"] }
-        ]
-    },
-    {
-        course: "Sandown",
-        time: "15:40",
-        type: "Handicap",
-        runners: 10,
-        placesPaid: 3, // WILL BE HIDDEN (Less than 4 places)
-        horses: [
-            { name: "Place Finder", odds: "8/1", features: ["market_move", "ground_suitability"] }
-        ]
-    }
-];
 
 // Exact Ferrari & Champagne Scoring System
 function calculateScore(horse, raceRunners, placesPaid) {
