@@ -1,4 +1,4 @@
-File Hat Man told me to create
+// File Hat Man told me to create
 
 const todaysRaces = [
   {
