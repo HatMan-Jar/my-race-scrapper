@@ -1,0 +1,108 @@
+//Screenshots
+
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Ferrari Screenshot Tester</h1>
+
+<input type="file" id="imageInput">
+
+<br><br>
+
+<img id="preview" style="max-width:100%;">
+
+<div id="info"></div>
+<br>
+
+<input id="horseName" placeholder="Horse name">
+
+<input id="horseOdds" placeholder="Odds (e.g. 9/1)">
+
+<br><br>
+
+<label><input type="checkbox" id="marketMove"> Market Move</label><br>
+
+<label><input type="checkbox" id="groundSuitability"> Ground Suitability</label><br>
+
+<label><input type="checkbox" id="betterThanResult"> Better Than Result</label><br>
+
+<label><input type="checkbox" id="handicapMark"> Handicap Mark</label><br>
+
+<label><input type="checkbox" id="trainerForm"> Trainer Form</label><br>
+
+<button onclick="scoreHorse()">
+Score Horse
+</button>
+
+<div id="scoreResult"></div>
+
+<script>
+document.getElementById('imageInput').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+
+  if (file) {
+
+    document.getElementById('preview').src =
+        URL.createObjectURL(file);
+
+    document.getElementById('info').innerHTML =
+        "<h3>Screenshot loaded</h3>" +
+        "<p>Name: " + file.name + "</p>" +
+        "<p>Size: " + Math.round(file.size / 1024) + " KB</p>";
+}
+});
+function scoreHorse() {
+
+    const name =
+        document.getElementById('horseName').value;
+
+    const odds =
+        document.getElementById('horseOdds').value;
+
+    let score = 0;
+
+if (document.getElementById('marketMove').checked)
+    score += 4;
+
+if (document.getElementById('groundSuitability').checked)
+    score += 3;
+
+if (document.getElementById('betterThanResult').checked)
+    score += 3;
+
+if (document.getElementById('handicapMark').checked)
+    score += 2;
+
+if (document.getElementById('trainerForm').checked)
+    score += 2;
+
+    const parts = odds.split('/');
+
+    if (parts.length === 2) {
+
+        const val =
+            parseFloat(parts[0]) /
+            parseFloat(parts[1]);
+
+        if (val >= 6 && val <= 16) {
+            score += 3;
+        }
+    }
+
+    let verdict = "No Bet";
+
+    if (score >= 3) {
+        verdict = "Ferrari Candidate 🍾";
+    }
+
+    document.getElementById('scoreResult').innerHTML =
+        "<h3>" + name + "</h3>" +
+        "<p>Odds: " + odds + "</p>" +
+        "<p>Score: " + score + "</p>" +
+        "<p>" + verdict + "</p>";
+}
+</script>
+
+</body>
+</html>
