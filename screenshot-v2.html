@@ -62,6 +62,21 @@ function scoreHorse() {
 
     let score = 0;
 
+if (document.getElementById('marketMove').checked)
+    score += 4;
+
+if (document.getElementById('groundSuitability').checked)
+    score += 3;
+
+if (document.getElementById('betterThanResult').checked)
+    score += 3;
+
+if (document.getElementById('handicapMark').checked)
+    score += 2;
+
+if (document.getElementById('trainerForm').checked)
+    score += 2;
+
     const parts = odds.split('/');
 
     if (parts.length === 2) {
