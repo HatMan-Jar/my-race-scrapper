@@ -62,6 +62,17 @@ function scoreHorse() {
 
     let score = 0;
 
+const odds = document.getElementById('horseOdds').value;
+
+if (odds === "5/1") score += 1;
+else if (odds === "6/1") score += 2;
+else if (odds === "7/1") score += 3;
+else if (odds === "8/1") score += 3;
+else if (odds === "9/1") score += 3;
+else if (odds === "10/1") score += 2;
+else if (odds === "11/1") score += 2;
+else if (odds === "12/1") score += 1;
+
 if (document.getElementById('marketMove').checked)
     score += 4;
 
@@ -92,7 +103,7 @@ if (document.getElementById('trainerForm').checked)
 
     let verdict = "No Bet";
 
-    if (score >= 3) {
+    if (score >= 12) {
         verdict = "Ferrari Candidate 🍾";
     }
 
