@@ -87,27 +87,7 @@ if (document.getElementById('handicapMark').checked)
 
 if (document.getElementById('trainerForm').checked)
     score += 2;
-
-    const parts = odds.split('/');
-
-    if (parts.length === 2) {
-
-        const val =
-            parseFloat(parts[0]) /
-            parseFloat(parts[1]);
-
-        if (val >= 6 && val <= 16) {
-            score += 3;
-        }
-    }
-
-    let verdict = "No Bet";
-
-    if (score >= 12) {
-        verdict = "Ferrari Candidate 🍾";
-    }
-
-    document.getElementById('scoreResult').innerHTML =
+ document.getElementById('scoreResult').innerHTML =
         "<h3>" + name + "</h3>" +
         "<p>Odds: " + odds + "</p>" +
         "<p>Score: " + score + "</p>" +
