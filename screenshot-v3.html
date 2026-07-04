@@ -108,6 +108,15 @@ if (score >= 12) {
     verdict = "Ferrari Candidate 🍾";
 }
  document.getElementById('scoreResult').innerHTML =
+const table = document.getElementById("resultsTable")
+                      .getElementsByTagName("tbody")[0];
+
+const row = table.insertRow();
+
+row.insertCell(0).innerText = name;
+row.insertCell(1).innerText = odds;
+row.insertCell(2).innerText = score + " / 17";
+row.insertCell(3).innerText = verdict;
         "<h3>" + name + "</h3>" +
         "<p>Odds: " + odds + "</p>" +
         "<p>Score: " + score + " / 17</p>" +
