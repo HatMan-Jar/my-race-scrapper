@@ -30,6 +30,14 @@ data.racecards.forEach(race => {
     if (!race.race_name.includes("Handicap")) return;
     if (parseInt(race.field_size) < 9) return;
 
+    let html = "";
+
+data.racecards.forEach(race => {
+
+    if (race.type !== "Flat") return;
+    if (!race.race_name.includes("Handicap")) return;
+    if (parseInt(race.field_size) < 9) return;
+
     html += `
         <div class="race-card">
             <div class="race-title">
@@ -45,6 +53,11 @@ data.racecards.forEach(race => {
             </div>
         </div>
     `;
+
+});
+
+document.getElementById("results").innerHTML = html;
+
 
 });
 
