@@ -12,18 +12,13 @@ async function loadTodaysRaces() {
 
     try {
 
-        const response = await fetch(
-            "https://api.theracingapi.com/v1/racecards/today",
-            {
-                headers: {
-                    Authorization:
-                        "Basic " +
-                        btoa(API_USERNAME + ":" + API_PASSWORD)
-                }
-            }
-        );
-
+        
+const response = await fetch(
+    "https://ferrari-bot.daisyboriscar.workers.dev"
+);
         const data = await response.json();
+
+console.log(data.racecards);
 
         console.log(data);
 
