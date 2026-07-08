@@ -22,10 +22,35 @@ console.log(data.racecards);
 
         console.log(data);
 
-        document.getElementById("results").innerHTML =
-            "<pre>" +
-            JSON.stringify(data, null, 2) +
-            "</pre>";
+        let html = "";
+
+data.racecards.forEach(race => {
+
+    if (race.type !== "Flat") return;
+    if (!race.race_name.includes("Handicap")) return;
+    if (parseInt(race.field_size) < 9) return;
+
+    html += `
+        <div class="race-card">
+            <div class="race-title">
+                ${race.course} ${race.off_time}
+            </div>
+
+            <div class="race-subtitle">
+                ${race.race_name}
+            </div>
+
+            <div>
+                ${race.field_size} runners
+            </div>
+        </div>
+    `;
+
+});
+
+document.getElementById("results").innerHTML = html;
+
+
 
     } catch (err) {
 
