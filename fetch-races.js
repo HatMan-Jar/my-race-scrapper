@@ -32,8 +32,6 @@ data.racecards.forEach(race => {
 
     let html = "";
 
-data.racecards.forEach(race => {
-
     if (race.type !== "Flat") return;
     if (!race.race_name.includes("Handicap")) return;
     if (parseInt(race.field_size) < 9) return;
@@ -60,9 +58,6 @@ document.getElementById("results").innerHTML = html;
 
 
 });
-
-document.getElementById("results").innerHTML = html;
-
 
 
     } catch (err) {
