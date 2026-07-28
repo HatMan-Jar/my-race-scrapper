@@ -21,17 +21,14 @@ const response = await fetch(
 console.log(data.racecards);
 
         console.log(data);
+        console.log(data.racecards[0]);
+        console.log(data.racecards[0].runners):
 
         let html = "";
 
 data.racecards.forEach(race => {
 
-    if (race.type !== "Flat") return;
-    if (!race.race_name.includes("Handicap")) return;
-    if (parseInt(race.field_size) < 9) return;
-
-
-    if (race.type !== "Flat") return;
+       if (race.type !== "Flat") return;
     if (!race.race_name.includes("Handicap")) return;
     if (parseInt(race.field_size) < 9) return;
 
