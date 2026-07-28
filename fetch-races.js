@@ -63,6 +63,9 @@ html += `
         ${race.field_size} runners
     </div>
 
+    ${horsesHtml}
+
+    </div>
     `;
 
 });
