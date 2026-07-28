@@ -35,20 +35,34 @@ data.racecards.forEach(race => {
     if (!race.race_name.includes("Handicap")) return;
     if (parseInt(race.field_size) < 9) return;
 
-    html += `
-        <div class="race-card">
-            <div class="race-title">
-                ${race.course} ${race.off_time}
-            </div>
+  let horsesHtml = "";
 
-            <div class="race-subtitle">
-                ${race.race_name}
-            </div>
+race.runners.forEach(horse => {
 
-            <div>
-                ${race.field_size} runners
-            </div>
+    horsesHtml += `
+        <div class="horse-row">
+            <span>${horse.number}. ${horse.horse}</span>
+            <span>${horse.odds ?? ""}</span>
         </div>
+    `;
+
+});
+
+html += `
+<div class="race-card">
+
+    <div class="race-title">
+        ${race.course} ${race.off_time}
+    </div>
+
+    <div class="race-subtitle">
+        ${race.race_name}
+    </div>
+
+    <div style="margin-bottom:10px;">
+        ${race.field_size} runners
+    </div>
+
     `;
 
 });
