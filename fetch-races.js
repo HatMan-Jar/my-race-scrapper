@@ -36,14 +36,19 @@ data.racecards.forEach(race => {
 
 race.runners.forEach(horse => {
 
+    const score = 0;   // temporary until we add the Ferrari rules
+
     horsesHtml += `
         <div class="horse-row">
-            <span>${horse.number}. ${horse.horse}</span>
-            <span>${horse.odds ?? ""}</span>
+            <strong>${horse.number}. ${horse.horse}</strong><br>
+            Odds: ${horse.odds ?? "-"}<br>
+            Ferrari Score: ${score}/27
+            <hr>
         </div>
     `;
 
 });
+
 
 html += `
 <div class="race-card">
