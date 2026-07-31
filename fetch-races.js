@@ -7,7 +7,9 @@ const API_PASSWORD = "YOUR_PASSWORD";
  
 function calculateScore(horse)  {
 
-    let score = 0;
+    console.log(horse);
+ 
+ return 5;
 
     // Temporary scoring so we know it works
     if (horse.odds) score += 5;
