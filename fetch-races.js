@@ -11,12 +11,7 @@ function calculateScore(horse)  {
  
  return 5;
 
-    // Temporary scoring so we know it works
-    if (horse.odds) score += 5;
-
-    return score;
-
-}
+   }
 
 async function loadTodaysRaces() {
 
