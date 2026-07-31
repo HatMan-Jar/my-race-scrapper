@@ -56,6 +56,9 @@ data.racecards.forEach(race => {
     if (parseInt(race.field_size) < 9) return;
 
   let horsesHtml = "";
+ 
+ race.runners.sort((a, b) =>
+  calculateScore(b) - calculateScore(a));
 
 race.runners.forEach(horse => {
 
