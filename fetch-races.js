@@ -33,9 +33,7 @@ function calculateScore(horse) {
       (horse.form.startsWith("11")) score += 4;
      else if
       (horse.form.startsWith("1")) score += 2;
-    
-    return score;
-}
+    }
 
 async function loadTodaysRaces() {
 
