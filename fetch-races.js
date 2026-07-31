@@ -5,13 +5,28 @@
 const API_USERNAME = "YOUR_USERNAME";
 const API_PASSWORD = "YOUR_PASSWORD";
  
-function calculateScore(horse)  {
+function calculateScore(horse) {
+    let score = 0;
 
-    console.log(horse);
- 
- return 5;
+    // Recent form
+    if (horse.form) {
+        const wins = (horse.form.match(/1/g) || []).length;
+        score += wins * 2;
+    }
 
-   }
+    // Good draw
+    if (horse.draw && parseInt(horse.draw) <= 5) {
+        score += 2;
+    }
+
+    // Low weight
+    if (horse.lbs && parseInt(horse.lbs) < 130) {
+        score += 2;
+    }
+
+    return Math.min(score, 27);
+}
+
 
 async function loadTodaysRaces() {
 
