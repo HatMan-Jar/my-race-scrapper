@@ -6,14 +6,24 @@ const API_USERNAME = "YOUR_USERNAME";
 const API_PASSWORD = "YOUR_PASSWORD";
  
 function calculateScore(horse) {
+
     let score = 0;
 
-    // Won at least one race
- if (parseInt(horse.wins) > 0) score
- += 2;
+    // Recent winner
+    if (horse.form && horse.form.includes("1")) score += 3;
 
- return score;
-    }
+    // Ran recently
+    if (parseInt(horse.last_run) <= 30) score += 2;
+
+    // Good draw
+    if (parseInt(horse.draw) <= 4) score += 1;
+
+    // Young horse
+    if (parseInt(horse.age) <= 4) score += 2;
+
+    return score;
+}
+
 
     // Good draw
     if (horse.draw && parseInt(horse.draw) <= 5) {
