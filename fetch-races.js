@@ -4,6 +4,17 @@
 
 const API_USERNAME = "YOUR_USERNAME";
 const API_PASSWORD = "YOUR_PASSWORD";
+ 
+function calculateScore(horse)  {
+
+    let score = 0;
+
+    // Temporary scoring so we know it works
+    if (horse.odds) score += 5;
+
+    return score;
+
+}
 
 async function loadTodaysRaces() {
 
@@ -36,7 +47,7 @@ data.racecards.forEach(race => {
 
 race.runners.forEach(horse => {
 
-    const score = 0;   // temporary until we add the Ferrari rules
+    const score = calculateScore(horse);   // temporary until we add the Ferrari rules
 
     horsesHtml += `
         <div class="horse-row">
