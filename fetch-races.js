@@ -24,21 +24,6 @@ function calculateScore(horse) {
     return score;
 }
 
-
-    // Good draw
-    if (horse.draw && parseInt(horse.draw) <= 5) {
-        score += 2;
-    }
-
-    // Low weight
-    if (horse.lbs && parseInt(horse.lbs) < 130) {
-        score += 2;
-    }
-
-    return Math.min(score, 27);
-}
-
-
 async function loadTodaysRaces() {
 
     document.getElementById("results").innerHTML =
