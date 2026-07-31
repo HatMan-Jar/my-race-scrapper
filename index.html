@@ -1,45 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ferrari Test 999</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f5f5f7; color: #1d1d1f; padding: 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        h1 { color: #1c1c1e; border-bottom: 2px solid #f2f2f7; padding-bottom: 10px; font-size: 24px; }
-        .btn { background-color: #0071e3; color: white; border: none; padding: 12px 20px; font-size: 16px; border-radius: 8px; cursor: pointer; width: 100%; font-weight: 600; margin-bottom: 15px; }
-        .btn:hover { background-color: #0077ed; }
-        .race-card { background: #fbfbfd; border: 1px solid #d2d2d7; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
-        .race-title { font-size: 18px; font-weight: bold; color: #1d1d1f; margin-bottom: 5px; }
-        .race-subtitle { font-size: 13px; color: #86868b; margin-bottom: 15px; font-weight: 500; }
-        .horse-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e5e5ea; }
-        .horse-row:last-child { border-bottom: none; }
-        .badge { padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 12px; }
-        .badge-strong { background-color: #34c759; color: white; }
-        .badge-consider { background-color: #ff9500; color: white; }
-        .badge-watch { background-color: #ffcc00; color: #1d1d1f; }
-        #api-notes-section { background-color: #f2f2f7; padding: 12px; border-radius: 6px; font-size: 13px; margin-bottom: 20px; color: #86868b; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ferrari & Champagne Racing Bot v1000</title>
+
+<link rel="stylesheet" href="styles.css">
+
 </head>
+
 <body>
 
 <div class="container">
-    <h1>🍾 Ferrari & Champagne Racing Bot v999</h1>
-    
-    <div id="api-notes-section">
-        <strong>Filter Settings:</strong> Handicaps only | <strong>9+ Runners</strong> | <strong>4+ EW Places</strong> | Odds 6/1 - 16/1
-    </div>
 
-    
-   <button class="btn" onclick="loadTodaysRaces()">🏇 Load Today's Races</button>
-    <div id="results">
-        <p style="color: #86868b; text-align: center;">Click the button above to load and score the races.</p>
-    </div>
+<h1>🍾 Ferrari & Champagne Racing Bot v1000</h1>
+
+<div class="filters">
+<b>Filter Settings:</b>
+Handicaps only |
+9+ Runners |
+4+ EW Places |
+Odds 6/1 - 16/1
+</div>
+
+<button class="btn" onclick="loadTodaysRaces()">
+🍷 Load Today's Races
+</button>
+
+<div id="results">
+<p style="text-align:center;color:#777;">
+Click the button to load today's races.
+</p>
+</div>
+
 </div>
 
 <script src="fetch-races.js"></script>
-
 
 </body>
 </html>
