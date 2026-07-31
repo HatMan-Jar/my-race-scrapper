@@ -22,6 +22,7 @@ function calculateScore(horse) {
      if (draw === 1) score += 3;
      else if (draw <= 3) score += 2;
      else if (draw <= 5) score += 1;
+    }
 
     // Young horse
     if (parseInt(horse.age) <= 4) score += 2;
@@ -33,6 +34,8 @@ function calculateScore(horse) {
       (horse.form.startsWith("11")) score += 4;
      else if
       (horse.form.startsWith("1")) score += 2;
+
+     return score;
     }
 
 async function loadTodaysRaces() {
