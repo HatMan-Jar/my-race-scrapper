@@ -15,12 +15,25 @@ function calculateScore(horse) {
     // Ran recently
     if (parseInt(horse.last_run) <= 30) score += 2;
 
-    // Good draw
-    if (parseInt(horse.draw) <= 4) score += 1;
+    // Draw Bonus
+    if (horse.draw) {
+     const draw = parseInt(horse.draw);
+
+     if (draw === 1) score += 3;
+     else if (draw <= 3) score += 2;
+     else if (draw <= 5) score += 1;
 
     // Young horse
     if (parseInt(horse.age) <= 4) score += 2;
 
+     // Recent form
+     if (horse.form.startsWith("111"))
+      score += 6;
+     else if
+      (horse.form.startsWith("11")) score += 4;
+     else if
+      (horse.form.startsWith("1")) score += 2;
+    
     return score;
 }
 
