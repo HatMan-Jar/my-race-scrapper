@@ -8,10 +8,11 @@ const API_PASSWORD = "YOUR_PASSWORD";
 function calculateScore(horse) {
     let score = 0;
 
-    // Recent form
-    if (horse.form) {
-        const wins = (horse.form.match(/1/g) || []).length;
-        score += wins * 2;
+    // Won at least one race
+ if (parseInt(horse.wins) > 0) score
+ += 2;
+
+ return score;
     }
 
     // Good draw
