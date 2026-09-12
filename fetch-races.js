@@ -51,6 +51,9 @@ const response = await fetch(
     "https://ferrari-bot.daisyboriscar.workers.dev"
 );
         const data = await response.json();
+     if (!data.racecards || !Array.isArray(data.racecards)) {
+    throw new Error("No racecards returned by API");
+}
 
 console.log(data.racecards);
 
@@ -79,7 +82,7 @@ race.runners.forEach(horse => {
         <div class="horse-row">
             <strong>${horse.number}. ${horse.horse}</strong><br>
             Odds: ${horse.odds ?? "-"}<br>
-            Ferrari Score: ${score}/27
+            Ferrari Score: ${score}
             <hr>
         </div>
     `;
