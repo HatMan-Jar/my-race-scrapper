@@ -6,38 +6,39 @@ const API_USERNAME = "YOUR_USERNAME";
 const API_PASSWORD = "YOUR_PASSWORD";
  
 function calculateScore(horse) {
-
     let score = 0;
 
+    const form = horse.form || "";
+    const lastRun = parseInt(horse.last_run);
+    const draw = parseInt(horse.draw);
+    const age = parseInt(horse.age);
+
     // Recent winner
-    if (horse.form && horse.form.includes("1")) score += 3;
+    if (form.includes("1")) score += 3;
 
     // Ran recently
-    if (parseInt(horse.last_run) <= 30) score += 2;
+    if (!isNaN(lastRun) && lastRun <= 30) score += 2;
 
-    // Draw Bonus
-    if (horse.draw) {
-     const draw = parseInt(horse.draw);
-
-     if (draw === 1) score += 3;
-     else if (draw <= 3) score += 2;
-     else if (draw <= 5) score += 1;
+    // Draw bonus
+    if (!isNaN(draw)) {
+        if (draw === 1) score += 3;
+        else if (draw <= 3) score += 2;
+        else if (draw <= 5) score += 1;
     }
 
     // Young horse
-    if (parseInt(horse.age) <= 4) score += 2;
+    if (!isNaN(age) && age <= 4) score += 2;
 
-     // Recent form
-     if (horse.form.startsWith("111"))
-      score += 6;
-     else if
-      (horse.form.startsWith("11")) score += 4;
-     else if
-      (horse.form.startsWith("1")) score += 2;
+    // Recent form
+    if (form.startsWith("111"))
+        score += 6;
+    else if (form.startsWith("11"))
+        score += 4;
+    else if (form.startsWith("1"))
+        score += 2;
 
-     return score;
-    }
-
+    return score;
+}
 async function loadTodaysRaces() {
 
     document.getElementById("results").innerHTML =
@@ -66,9 +67,6 @@ data.racecards.forEach(race => {
     if (parseInt(race.field_size) < 9) return;
 
   let horsesHtml = "";
- race.runners.sort((a, b) =>
-  calculateScore(b) -
-  calculateScore(a));
  
  race.runners.sort((a, b) =>
   calculateScore(b) - calculateScore(a));
