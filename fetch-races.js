@@ -9,35 +9,139 @@ function calculateScore(horse) {
     let score = 0;
 
     const form = horse.form || "";
+    const nums = (form.match(/[0-9]/g) || []).map(Number);
+
     const lastRun = parseInt(horse.last_run);
     const draw = parseInt(horse.draw);
     const age = parseInt(horse.age);
 
-    // Recent winner
-    if (form.includes("1")) score += 3;
+    // --------------------------------
+    // 1. LATEST FINISH — MAX 4
+    // Most recent run is the RIGHT side
+    // --------------------------------
+    const latest = nums.length ? nums[nums.length - 1] : NaN;
 
-    // Ran recently
-    if (!isNaN(lastRun) && lastRun <= 30) score += 2;
+    if (latest === 1) score += 4;
+    else if (latest === 2) score += 3;
+    else if (latest === 3) score += 2;
+    else if (latest === 4 || latest === 5) score += 1;
 
-    // Draw bonus
-    if (!isNaN(draw)) {
-        if (draw === 1) score += 3;
-        else if (draw <= 3) score += 2;
-        else if (draw <= 5) score += 1;
-    }
 
-    // Young horse
-    if (!isNaN(age) && age <= 4) score += 2;
+    // --------------------------------
+    // 2. RECENT WINNING SEQUENCE — MAX 5
+    // --------------------------------
+    const cleanForm = form.replace(/[^0-9]/g, "");
 
-    // Recent form
-    if (form.startsWith("111"))
-        score += 6;
-    else if (form.startsWith("11"))
+    if (cleanForm.endsWith("111"))
+        score += 5;
+    else if (cleanForm.endsWith("11"))
         score += 4;
-    else if (form.startsWith("1"))
+    else if (cleanForm.endsWith("1"))
         score += 2;
 
-    return score;
+
+    // --------------------------------
+    // 3. HOW RECENTLY IT RAN — MAX 3
+    // --------------------------------
+    if (!isNaN(lastRun)) {
+        if (lastRun <= 14)
+            score += 3;
+        else if (lastRun <= 30)
+            score += 2;
+        else if (lastRun <= 60)
+            score += 1;
+    }
+
+
+    // --------------------------------
+    // 4. DRAW — MAX 3
+    // --------------------------------
+    if (!isNaN(draw)) {
+        if (draw === 1)
+            score += 3;
+        else if (draw <= 3)
+            score += 2;
+        else if (draw <= 5)
+            score += 1;
+    }
+
+
+    // --------------------------------
+    // 5. AGE — MAX 2
+    // --------------------------------
+    if (!isNaN(age) && age <= 4)
+        score += 2;
+
+
+    // --------------------------------
+    // 6. CONSISTENCY — MAX 2
+    // Two or more top-three finishes
+    // in the last four runs
+    // --------------------------------
+    const recent4 = nums.slice(-4);
+
+    const topThree = recent4.filter(
+        position => position >= 1 && position <= 3
+    ).length;
+
+    if (topThree >= 2)
+        score += 2;
+
+
+    // --------------------------------
+    // 7. IMPROVING FORM — MAX 2
+    // Example: 6 → 4 → 2
+    // --------------------------------
+    const recent3 = nums.slice(-3);
+
+    if (
+        recent3.length === 3 &&
+        recent3[0] > recent3[1] &&
+        recent3[1] > recent3[2]
+    ) {
+        score += 2;
+    }
+
+
+    // --------------------------------
+    // 8. CLEAN FORM — MAX 1
+    // No falls, pulls-up, etc.
+    // --------------------------------
+    if (!/[0PFURB]/i.test(form))
+        score += 1;
+
+
+    // --------------------------------
+    // 9. RECENT WINS — MAX 3
+    // --------------------------------
+    const wins = nums.filter(position => position === 1).length;
+
+    if (wins >= 2)
+        score += 3;
+    else if (wins === 1)
+        score += 1;
+
+
+    // --------------------------------
+    // 10. ODDS / VALUE BAND — MAX 2
+    // --------------------------------
+    const oddsText = String(horse.odds || "");
+    const oddsMatch = oddsText.match(/^(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)$/);
+
+    if (oddsMatch) {
+        const odds = Number(oddsMatch[1]) / Number(oddsMatch[2]);
+
+        if (odds >= 6 && odds <= 8)
+            score += 2;
+        else if (odds > 8 && odds <= 12)
+            score += 1;
+    }
+
+
+    // --------------------------------
+    // FERRARI MAXIMUM = 27
+    // --------------------------------
+    return Math.min(score, 27);
 }
 async function loadTodaysRaces() {
 
