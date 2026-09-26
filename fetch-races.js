@@ -5,10 +5,6 @@
 const API_USERNAME = "YOUR_USERNAME";
 const API_PASSWORD = "YOUR_PASSWORD";
  
-// ===============================
-// Ferrari Bot - Live Race Loader
-// ===============================
-
 // ============================================
 // FERRARI SCORE BREAKDOWN
 // ============================================
@@ -225,7 +221,6 @@ function getScoreBreakdown(horse) {
 }
 
 
-
 // ============================================
 // FERRARI SCORE
 // ============================================
@@ -234,7 +229,6 @@ function calculateScore(horse) {
 
     return getScoreBreakdown(horse).total;
 }
-
 
 
 // ============================================
@@ -366,6 +360,300 @@ function saveFerrariPrediction(
     );
 }
 
+
+// ============================================
+// FERRARI TRACKER DISPLAY
+// ============================================
+
+function renderFerrariTracker() {
+
+    const trackerKey = "ferrariTracker";
+
+    const tracker =
+        JSON.parse(
+            localStorage.getItem(trackerKey) || "[]"
+        );
+
+
+    if (!tracker.length) {
+
+        return `
+            <div
+                style="
+                    background:#f4f4f4;
+                    padding:15px;
+                    margin-bottom:20px;
+                    border-radius:8px;
+                "
+            >
+
+                <strong>🏎️ Ferrari Tracker</strong>
+
+                <p style="margin-bottom:0;">
+                    No Ferrari predictions have been saved yet.
+                </p>
+
+            </div>
+        `;
+    }
+
+
+    // --------------------------------
+    // Sort newest first
+    // --------------------------------
+
+    const sorted =
+        [...tracker].sort((a, b) => {
+
+            const aKey =
+                `${a.date || ""} ${a.time || ""}`;
+
+            const bKey =
+                `${b.date || ""} ${b.time || ""}`;
+
+            return bKey.localeCompare(aKey);
+        });
+
+
+    // --------------------------------
+    // Basic tracker statistics
+    // --------------------------------
+
+    const totalRaces =
+        sorted.length;
+
+    const pending =
+        sorted.filter(
+            item => item.result === null || item.result === undefined
+        ).length;
+
+    const completed =
+        totalRaces - pending;
+
+
+    // --------------------------------
+    // Build rows
+    // --------------------------------
+
+    let rows = "";
+
+
+    sorted.forEach(item => {
+
+        let resultText = "⏳ Pending";
+
+        if (
+            item.result !== null &&
+            item.result !== undefined &&
+            item.result !== ""
+        ) {
+            resultText = item.result;
+        }
+
+
+        rows += `
+
+            <tr>
+
+                <td style="padding:8px; border-bottom:1px solid #ddd;">
+                    <strong>
+                        ${item.course || "-"}
+                    </strong><br>
+                    <small>
+                        ${item.time || "-"}
+                    </small>
+                </td>
+
+
+                <td style="padding:8px; border-bottom:1px solid #ddd;">
+                    <strong>
+                        ${item.ferrari1 || "-"}
+                    </strong><br>
+                    <small>
+                        ${item.ferrari1Score || 0}/27
+                    </small>
+                </td>
+
+
+                <td style="padding:8px; border-bottom:1px solid #ddd;">
+                    ${item.ferrari2 || "-"}<br>
+                    <small>
+                        ${item.ferrari2Score || 0}/27
+                    </small>
+                </td>
+
+
+                <td style="padding:8px; border-bottom:1px solid #ddd;">
+                    ${item.ferrari3 || "-"}<br>
+                    <small>
+                        ${item.ferrari3Score || 0}/27
+                    </small>
+                </td>
+
+
+                <td style="padding:8px; border-bottom:1px solid #ddd;">
+                    ${item.gapToSecond ?? "-"}
+                </td>
+
+
+                <td style="padding:8px; border-bottom:1px solid #ddd;">
+                    ${item.topThreeAverage ?? "-"}/27
+                </td>
+
+
+                <td style="padding:8px; border-bottom:1px solid #ddd;">
+                    ${resultText}
+                </td>
+
+            </tr>
+        `;
+    });
+
+
+    // --------------------------------
+    // Return tracker panel
+    // --------------------------------
+
+    return `
+
+        <div
+            style="
+                background:#fff;
+                border:2px solid #222;
+                padding:15px;
+                margin-bottom:20px;
+                border-radius:8px;
+            "
+        >
+
+            <div
+                style="
+                    font-size:20px;
+                    margin-bottom:12px;
+                "
+            >
+                <strong>
+                    🏎️ Ferrari Tracker
+                </strong>
+            </div>
+
+
+            <div
+                style="
+                    display:flex;
+                    gap:20px;
+                    flex-wrap:wrap;
+                    margin-bottom:15px;
+                "
+            >
+
+                <div>
+                    <strong>
+                        ${totalRaces}
+                    </strong>
+                    <br>
+                    <small>Races tracked</small>
+                </div>
+
+
+                <div>
+                    <strong>
+                        ${pending}
+                    </strong>
+                    <br>
+                    <small>Awaiting results</small>
+                </div>
+
+
+                <div>
+                    <strong>
+                        ${completed}
+                    </strong>
+                    <br>
+                    <small>Completed</small>
+                </div>
+
+            </div>
+
+
+            <div style="overflow-x:auto;">
+
+                <table
+                    style="
+                        width:100%;
+                        border-collapse:collapse;
+                        font-size:14px;
+                    "
+                >
+
+                    <thead>
+
+                        <tr
+                            style="
+                                background:#f4f4f4;
+                                text-align:left;
+                            "
+                        >
+
+                            <th style="padding:8px;">
+                                Race
+                            </th>
+
+                            <th style="padding:8px;">
+                                🥇 Ferrari #1
+                            </th>
+
+                            <th style="padding:8px;">
+                                🥈 #2
+                            </th>
+
+                            <th style="padding:8px;">
+                                🥉 #3
+                            </th>
+
+                            <th style="padding:8px;">
+                                Gap
+                            </th>
+
+                            <th style="padding:8px;">
+                                Top 3 Avg
+                            </th>
+
+                            <th style="padding:8px;">
+                                Result
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        ${rows}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <div
+                style="
+                    margin-top:12px;
+                    font-size:12px;
+                    color:#666;
+                "
+            >
+                Tracker is stored in this browser.
+                Results and ROI will be added later.
+            </div>
+
+        </div>
+
+    `;
+}
 
 
 // ============================================
@@ -684,6 +972,7 @@ async function loadTodaysRaces() {
                         </strong>
 
                         —
+
                         ${topScore}/27
 
                         <br>
@@ -694,6 +983,7 @@ async function loadTodaysRaces() {
                         ${secondPick?.horse ?? "-"}
 
                         —
+
                         ${secondScore}/27
 
                         <br>
@@ -704,6 +994,7 @@ async function loadTodaysRaces() {
                         ${thirdPick?.horse ?? "-"}
 
                         —
+
                         ${thirdScore}/27
 
                         <br><br>
@@ -761,9 +1052,18 @@ async function loadTodaysRaces() {
         });
 
 
+        // ========================================
+        // ADD TRACKER ABOVE RACES
+        // ========================================
+
+        const trackerHtml =
+            renderFerrariTracker();
+
+
         document.getElementById(
             "results"
-        ).innerHTML = html;
+        ).innerHTML =
+            trackerHtml + html;
 
 
     } catch (err) {
