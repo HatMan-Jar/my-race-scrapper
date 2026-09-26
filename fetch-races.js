@@ -178,10 +178,26 @@ data.racecards.forEach(race => {
     if (!race.race_name.includes("Handicap")) return;
     if (parseInt(race.field_size) < 9) return;
 
-  let horsesHtml = "";
- 
- race.runners.sort((a, b) =>
-  calculateScore(b) - calculateScore(a));
+ let horsesHtml = "";
+
+race.runners.sort((a, b) =>
+    calculateScore(b) - calculateScore(a));
+
+const topPick = race.runners[0];
+const secondPick = race.runners[1];
+const thirdPick = race.runners[2];
+const fourthPick = race.runners[3];
+
+const topScore = topPick ? calculateScore(topPick) : 0;
+const secondScore = secondPick ? calculateScore(secondPick) : 0;
+const thirdScore = thirdPick ? calculateScore(thirdPick) : 0;
+const fourthScore = fourthPick ? calculateScore(fourthPick) : 0;
+
+const gapToSecond = topScore - secondScore;
+const gapToFourth = topScore - fourthScore;
+
+const topThreeAverage =
+    Math.round(((topScore + secondScore + thirdScore) / 3) * 10) / 10;
 
 race.runners.forEach(horse => {
 
@@ -224,11 +240,37 @@ html += `
         ${race.race_name}
     </div>
 
-    <div style="margin-bottom:10px;">
-        ${race.field_size} runners
-    </div>
+   <div style="margin-bottom:10px;">
+    ${race.field_size} runners
+</div>
 
-    ${horsesHtml}
+<div style="
+    background:#f4f4f4;
+    padding:10px;
+    margin-bottom:15px;
+    border-radius:6px;
+">
+
+    <strong>🏎️ Ferrari Race Analysis</strong><br><br>
+
+    🥇 <strong>${topPick?.horse ?? "-"}</strong>
+    — ${topScore}/27<br>
+
+    🥈 ${secondPick?.horse ?? "-"}
+    — ${secondScore}/27<br>
+
+    🥉 ${thirdPick?.horse ?? "-"}
+    — ${thirdScore}/27<br><br>
+
+    Gap to #2: <strong>${gapToSecond} point${gapToSecond === 1 ? "" : "s"}</strong><br>
+
+    Gap to #4: <strong>${gapToFourth} point${gapToFourth === 1 ? "" : "s"}</strong><br>
+
+    Top 3 average: <strong>${topThreeAverage}/27</strong>
+
+</div>
+
+${horsesHtml}
 
     </div>
     `;
