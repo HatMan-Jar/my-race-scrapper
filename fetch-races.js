@@ -366,7 +366,155 @@ function saveFerrariPrediction(
 // ============================================
 
 function renderFerrariTracker() {
+async function updateFerrariTrackerResults() {
 
+    const trackerKey = "ferrariTracker";
+
+    const tracker =
+        JSON.parse(
+            localStorage.getItem(trackerKey) || "[]"
+        );
+
+    if (!tracker.length)
+        return;
+
+    let changed = false;
+
+    for (const item of tracker) {
+
+        if (
+            item.result !== null &&
+            item.result !== undefined &&
+            item.result !== ""
+        )
+            continue;
+
+        if (
+            !item.raceId ||
+            !item.date ||
+            !item.course
+        )
+            continue;
+
+        try {
+
+            const resultUrl =
+                "https://ferrari-bot.daisyboriscar.workers.dev" +
+                "?race_id=" +
+                encodeURIComponent(item.raceId) +
+                "&date=" +
+                encodeURIComponent(item.date) +
+                "&course=" +
+                encodeURIComponent(item.course);
+
+            const response =
+                await fetch(resultUrl);
+
+            if (!response.ok)
+                continue;
+
+            const data =
+                await response.json();
+
+            if (
+                !data.success ||
+                !Array.isArray(data.results) ||
+                data.results.length === 0
+            )
+                continue;
+
+            const findPosition = horseName => {
+
+                if (!horseName)
+                    return null;
+
+                const found =
+                    data.results.find(
+                        result =>
+                            String(result.horse || "")
+                                .trim()
+                                .toLowerCase() ===
+                            String(horseName)
+                                .trim()
+                                .toLowerCase()
+                    );
+
+                return found
+                    ? found.position
+                    : null;
+            };
+
+            const ferrari1Result =
+                findPosition(item.ferrari1);
+
+            const ferrari2Result =
+                findPosition(item.ferrari2);
+
+            const ferrari3Result =
+                findPosition(item.ferrari3);
+
+            if (
+                ferrari1Result === null &&
+                ferrari2Result === null &&
+                ferrari3Result === null
+            )
+                continue;
+
+            item.ferrari1Result =
+                ferrari1Result;
+
+            item.ferrari2Result =
+                ferrari2Result;
+
+            item.ferrari3Result =
+                ferrari3Result;
+
+            item.result =
+                "#1 " +
+                (ferrari1Result || "-") +
+                " | #2 " +
+                (ferrari2Result || "-") +
+                " | #3 " +
+                (ferrari3Result || "-");
+
+            item.ferrari1Win =
+                ferrari1Result === "1";
+
+            item.ferrari1Placed =
+                ["1", "2", "3"].includes(
+                    String(ferrari1Result)
+                );
+
+            item.winnerInTop3 =
+                [
+                    ferrari1Result,
+                    ferrari2Result,
+                    ferrari3Result
+                ]
+                .map(String)
+                .includes("1");
+
+            changed = true;
+
+        } catch (err) {
+
+            console.warn(
+                "Could not update Ferrari result:",
+                item.course,
+                item.time,
+                err
+            );
+        }
+    }
+
+    if (changed) {
+
+        localStorage.setItem(
+            trackerKey,
+            JSON.stringify(tracker)
+        );
+    }
+}
     const trackerKey = "ferrariTracker";
 
     const tracker =
@@ -1056,8 +1204,10 @@ async function loadTodaysRaces() {
         // ADD TRACKER ABOVE RACES
         // ========================================
 
-        const trackerHtml =
-            renderFerrariTracker();
+        await updateFerrariTrackerResults();
+
+const trackerHtml =
+    renderFerrariTracker();
 
 
         document.getElementById(
