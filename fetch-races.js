@@ -5,8 +5,17 @@
 const API_USERNAME = "YOUR_USERNAME";
 const API_PASSWORD = "YOUR_PASSWORD";
  
-function calculateScore(horse) {
-    let score = 0;
+function getScoreBreakdown(horse) {
+    let latestFinish = 0;
+    let winningSequence = 0;
+    let fitness = 0;
+    let drawScore = 0;
+    let ageScore = 0;
+    let consistency = 0;
+    let improvingForm = 0;
+    let cleanFormScore = 0;
+    let recentWins = 0;
+    let value = 0;
 
     const form = horse.form || "";
     const nums = (form.match(/[0-9]/g) || []).map(Number);
@@ -17,14 +26,17 @@ function calculateScore(horse) {
 
     // --------------------------------
     // 1. LATEST FINISH — MAX 4
-    // Most recent run is the RIGHT side
     // --------------------------------
     const latest = nums.length ? nums[nums.length - 1] : NaN;
 
-    if (latest === 1) score += 4;
-    else if (latest === 2) score += 3;
-    else if (latest === 3) score += 2;
-    else if (latest === 4 || latest === 5) score += 1;
+    if (latest === 1)
+        latestFinish = 4;
+    else if (latest === 2)
+        latestFinish = 3;
+    else if (latest === 3)
+        latestFinish = 2;
+    else if (latest === 4 || latest === 5)
+        latestFinish = 1;
 
 
     // --------------------------------
@@ -33,11 +45,11 @@ function calculateScore(horse) {
     const cleanForm = form.replace(/[^0-9]/g, "");
 
     if (cleanForm.endsWith("111"))
-        score += 5;
+        winningSequence = 5;
     else if (cleanForm.endsWith("11"))
-        score += 4;
+        winningSequence = 4;
     else if (cleanForm.endsWith("1"))
-        score += 2;
+        winningSequence = 2;
 
 
     // --------------------------------
@@ -45,11 +57,11 @@ function calculateScore(horse) {
     // --------------------------------
     if (!isNaN(lastRun)) {
         if (lastRun <= 14)
-            score += 3;
+            fitness = 3;
         else if (lastRun <= 30)
-            score += 2;
+            fitness = 2;
         else if (lastRun <= 60)
-            score += 1;
+            fitness = 1;
     }
 
 
@@ -58,11 +70,11 @@ function calculateScore(horse) {
     // --------------------------------
     if (!isNaN(draw)) {
         if (draw === 1)
-            score += 3;
+            drawScore = 3;
         else if (draw <= 3)
-            score += 2;
+            drawScore = 2;
         else if (draw <= 5)
-            score += 1;
+            drawScore = 1;
     }
 
 
@@ -70,13 +82,11 @@ function calculateScore(horse) {
     // 5. AGE — MAX 2
     // --------------------------------
     if (!isNaN(age) && age <= 4)
-        score += 2;
+        ageScore = 2;
 
 
     // --------------------------------
     // 6. CONSISTENCY — MAX 2
-    // Two or more top-three finishes
-    // in the last four runs
     // --------------------------------
     const recent4 = nums.slice(-4);
 
@@ -85,12 +95,11 @@ function calculateScore(horse) {
     ).length;
 
     if (topThree >= 2)
-        score += 2;
+        consistency = 2;
 
 
     // --------------------------------
     // 7. IMPROVING FORM — MAX 2
-    // Example: 6 → 4 → 2
     // --------------------------------
     const recent3 = nums.slice(-3);
 
@@ -99,16 +108,15 @@ function calculateScore(horse) {
         recent3[0] > recent3[1] &&
         recent3[1] > recent3[2]
     ) {
-        score += 2;
+        improvingForm = 2;
     }
 
 
     // --------------------------------
     // 8. CLEAN FORM — MAX 1
-    // No falls, pulls-up, etc.
     // --------------------------------
     if (!/[0PFURB]/i.test(form))
-        score += 1;
+        cleanFormScore = 1;
 
 
     // --------------------------------
@@ -117,25 +125,72 @@ function calculateScore(horse) {
     const wins = nums.filter(position => position === 1).length;
 
     if (wins >= 2)
-        score += 3;
+        recentWins = 3;
     else if (wins === 1)
-        score += 1;
+        recentWins = 1;
 
 
     // --------------------------------
     // 10. ODDS / VALUE BAND — MAX 2
     // --------------------------------
     const oddsText = String(horse.odds || "");
-    const oddsMatch = oddsText.match(/^(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)$/);
+
+    const oddsMatch = oddsText.match(
+        /^(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)$/
+    );
 
     if (oddsMatch) {
-        const odds = Number(oddsMatch[1]) / Number(oddsMatch[2]);
+        const odds =
+            Number(oddsMatch[1]) /
+            Number(oddsMatch[2]);
 
         if (odds >= 6 && odds <= 8)
-            score += 2;
+            value = 2;
         else if (odds > 8 && odds <= 12)
-            score += 1;
+            value = 1;
     }
+
+
+    // --------------------------------
+    // TOTAL
+    // --------------------------------
+    const total =
+        latestFinish +
+        winningSequence +
+        fitness +
+        drawScore +
+        ageScore +
+        consistency +
+        improvingForm +
+        cleanFormScore +
+        recentWins +
+        value;
+
+
+    // --------------------------------
+    // RETURN FULL BREAKDOWN
+    // --------------------------------
+    return {
+        latestFinish,
+        winningSequence,
+        fitness,
+        drawScore,
+        ageScore,
+        consistency,
+        improvingForm,
+        cleanFormScore,
+        recentWins,
+        value,
+        total: Math.min(total, 27)
+    };
+
+// --------------------------------
+// FERRARI SCORE
+// --------------------------------
+
+function calculateScore(horse) {
+    return getScoreBreakdown(horse).total;
+}
 
 
     // --------------------------------
