@@ -24,24 +24,15 @@ function getScoreBreakdown(horse) {
     const draw = parseInt(horse.draw);
     const age = parseInt(horse.age);
 
-    // --------------------------------
     // 1. LATEST FINISH — MAX 4
-    // --------------------------------
     const latest = nums.length ? nums[nums.length - 1] : NaN;
 
-    if (latest === 1)
-        latestFinish = 4;
-    else if (latest === 2)
-        latestFinish = 3;
-    else if (latest === 3)
-        latestFinish = 2;
-    else if (latest === 4 || latest === 5)
-        latestFinish = 1;
+    if (latest === 1) latestFinish = 4;
+    else if (latest === 2) latestFinish = 3;
+    else if (latest === 3) latestFinish = 2;
+    else if (latest === 4 || latest === 5) latestFinish = 1;
 
-
-    // --------------------------------
     // 2. RECENT WINNING SEQUENCE — MAX 5
-    // --------------------------------
     const cleanForm = form.replace(/[^0-9]/g, "");
 
     if (cleanForm.endsWith("111"))
@@ -51,10 +42,7 @@ function getScoreBreakdown(horse) {
     else if (cleanForm.endsWith("1"))
         winningSequence = 2;
 
-
-    // --------------------------------
     // 3. HOW RECENTLY IT RAN — MAX 3
-    // --------------------------------
     if (!isNaN(lastRun)) {
         if (lastRun <= 14)
             fitness = 3;
@@ -64,10 +52,7 @@ function getScoreBreakdown(horse) {
             fitness = 1;
     }
 
-
-    // --------------------------------
     // 4. DRAW — MAX 3
-    // --------------------------------
     if (!isNaN(draw)) {
         if (draw === 1)
             drawScore = 3;
@@ -77,17 +62,11 @@ function getScoreBreakdown(horse) {
             drawScore = 1;
     }
 
-
-    // --------------------------------
     // 5. AGE — MAX 2
-    // --------------------------------
     if (!isNaN(age) && age <= 4)
         ageScore = 2;
 
-
-    // --------------------------------
     // 6. CONSISTENCY — MAX 2
-    // --------------------------------
     const recent4 = nums.slice(-4);
 
     const topThree = recent4.filter(
@@ -97,10 +76,7 @@ function getScoreBreakdown(horse) {
     if (topThree >= 2)
         consistency = 2;
 
-
-    // --------------------------------
     // 7. IMPROVING FORM — MAX 2
-    // --------------------------------
     const recent3 = nums.slice(-3);
 
     if (
@@ -111,17 +87,11 @@ function getScoreBreakdown(horse) {
         improvingForm = 2;
     }
 
-
-    // --------------------------------
     // 8. CLEAN FORM — MAX 1
-    // --------------------------------
     if (!/[0PFURB]/i.test(form))
         cleanFormScore = 1;
 
-
-    // --------------------------------
     // 9. RECENT WINS — MAX 3
-    // --------------------------------
     const wins = nums.filter(position => position === 1).length;
 
     if (wins >= 2)
@@ -129,10 +99,7 @@ function getScoreBreakdown(horse) {
     else if (wins === 1)
         recentWins = 1;
 
-
-    // --------------------------------
     // 10. ODDS / VALUE BAND — MAX 2
-    // --------------------------------
     const oddsText = String(horse.odds || "");
 
     const oddsMatch = oddsText.match(
@@ -150,10 +117,6 @@ function getScoreBreakdown(horse) {
             value = 1;
     }
 
-
-    // --------------------------------
-    // TOTAL
-    // --------------------------------
     const total =
         latestFinish +
         winningSequence +
@@ -166,10 +129,6 @@ function getScoreBreakdown(horse) {
         recentWins +
         value;
 
-
-    // --------------------------------
-    // RETURN FULL BREAKDOWN
-    // --------------------------------
     return {
         latestFinish,
         winningSequence,
@@ -183,20 +142,11 @@ function getScoreBreakdown(horse) {
         value,
         total: Math.min(total, 27)
     };
-
-// --------------------------------
-// FERRARI SCORE
-// --------------------------------
-
-function calculateScore(horse) {
-    return getScoreBreakdown(horse).total;
 }
 
 
-    // --------------------------------
-    // FERRARI MAXIMUM = 27
-    // --------------------------------
-    return Math.min(score, 27);
+function calculateScore(horse) {
+    return getScoreBreakdown(horse).total;
 }
 async function loadTodaysRaces() {
 
