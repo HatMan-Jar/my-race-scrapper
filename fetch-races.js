@@ -185,17 +185,31 @@ data.racecards.forEach(race => {
 
 race.runners.forEach(horse => {
 
-    const score = calculateScore(horse);   // temporary until we add the Ferrari rules
+    const breakdown = getScoreBreakdown(horse);
 
     horsesHtml += `
         <div class="horse-row">
             <strong>${horse.number}. ${horse.horse}</strong><br>
             Odds: ${horse.odds ?? "-"}<br>
-            Ferrari Score: ${score}
+
+            <strong>Ferrari Score: ${breakdown.total}/27</strong><br>
+
+            <small>
+                Latest: +${breakdown.latestFinish}
+                | Winning: +${breakdown.winningSequence}
+                | Fitness: +${breakdown.fitness}
+                | Draw: +${breakdown.drawScore}
+                | Age: +${breakdown.ageScore}
+                | Consistency: +${breakdown.consistency}
+                | Improving: +${breakdown.improvingForm}
+                | Clean: +${breakdown.cleanFormScore}
+                | Wins: +${breakdown.recentWins}
+                | Value: +${breakdown.value}
+            </small>
+
             <hr>
         </div>
     `;
-
 });
 
 
