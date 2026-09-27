@@ -365,7 +365,7 @@ function saveFerrariPrediction(
 // FERRARI TRACKER DISPLAY
 // ============================================
 
-function renderFerrariTracker() {
+
 async function updateFerrariTrackerResults() {
 
     const trackerKey = "ferrariTracker";
@@ -515,7 +515,8 @@ async function updateFerrariTrackerResults() {
         );
     }
 }
-    const trackerKey = "ferrariTracker";
+ function renderFerrariTracker() {   
+const trackerKey = "ferrariTracker";
 
     const tracker =
         JSON.parse(
