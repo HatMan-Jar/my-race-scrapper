@@ -405,7 +405,9 @@ async function updateFerrariTrackerResults() {
                 "&date=" +
                 encodeURIComponent(item.date) +
                 "&course=" +
-                encodeURIComponent(item.course);
+                encodeURIComponent(item.course); +
+             "&time=" +
+             encodeURIComponent(item.time);
 
             const response =
                 await fetch(resultUrl);
